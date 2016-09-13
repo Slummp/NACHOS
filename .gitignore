@@ -1,4 +1,8 @@
+*
+!*.*
+!Makefile
 /code/test/Makefile
 /bin/
-
+*.o
+*.d
 

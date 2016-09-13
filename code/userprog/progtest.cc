@@ -23,26 +23,26 @@
 void
 StartProcess (char *filename)
 {
-    OpenFile *executable = fileSystem->Open (filename);
-    AddrSpace *space;
+	OpenFile *executable = fileSystem->Open (filename);
+	AddrSpace *space;
 
-    if (executable == NULL)
-      {
-	  printf ("Unable to open file %s\n", filename);
-	  return;
-      }
-    space = new AddrSpace (executable);
-    currentThread->space = space;
+	if (executable == NULL)
+	{
+		printf ("Unable to open file %s\n", filename);
+		return;
+	}
+	space = new AddrSpace (executable);
+	currentThread->space = space;
 
-    delete executable;		// close file
+	delete executable;		// close file
 
-    space->InitRegisters ();	// set the initial register values
-    space->RestoreState ();	// load page table register
+	space->InitRegisters ();	// set the initial register values
+	space->RestoreState ();	        // load page table register
 
-    machine->Run ();		// jump to the user progam
-    ASSERT (FALSE);		// machine->Run never returns;
-    // the address space exits
-    // by doing the syscall "exit"
+	machine->Run ();		// jump to the user progam
+	ASSERT (FALSE);		        // machine->Run never returns;
+	// the address space exits
+	// by doing the syscall "exit"
 }
 
 // Data structures needed for the console test.  Threads making
@@ -60,14 +60,14 @@ static Semaphore *writeDone;
 static void
 ReadAvailHandler (void *arg)
 {
-    (void) arg;
-    readAvail->V ();
+	(void) arg;
+	readAvail->V ();
 }
 static void
 WriteDoneHandler (void *arg)
 {
-    (void) arg;
-    writeDone->V ();
+	(void) arg;
+	writeDone->V ();
 }
 
 //----------------------------------------------------------------------
@@ -79,24 +79,35 @@ WriteDoneHandler (void *arg)
 void
 ConsoleTest (const char *in, const char *out)
 {
-    char ch;
+	char ch;
 
-    readAvail = new Semaphore ("read avail", 0);
-    writeDone = new Semaphore ("write done", 0);
-    console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
+	readAvail = new Semaphore ("read avail", 0);
+	writeDone = new Semaphore ("write done", 0);
+	console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
 
-    for (;;)
-      {
-	  readAvail->P ();	// wait for character to arrive
-	  ch = console->GetChar ();
-	  console->PutChar (ch);	// echo it!
-	  writeDone->P ();	// wait for write to finish
-	  if (ch == 'q') {
-	      printf ("Nothing more, bye!\n");
-	      break;		// if q, quit
-	  }
-      }
-    delete console;
-    delete readAvail;
-    delete writeDone;
+	for (;;)
+	{
+		readAvail->P ();	       // wait for character to arrive
+		ch = console->GetChar ();
+		if (ch != '\n' && ch != EOF) 
+		{
+			console->PutChar ('<');
+			writeDone->P ();
+		}
+		console->PutChar (ch);         // echo it!
+		writeDone->P ();
+		if (ch != '\n' && ch != EOF) 
+		{
+			console->PutChar ('>');
+			writeDone->P ();
+		}
+         	// wait for write to finish
+		if (ch == 'q' || ch == EOF) {
+			printf ("Nothing more, bye!\n");
+			break;		// if q, quit
+		}
+	}
+	delete console;
+	delete readAvail;
+	delete writeDone;
 }
