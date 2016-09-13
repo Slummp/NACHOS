@@ -1,8 +1,8 @@
-*
-!*.*
-!Makefile
 /code/test/Makefile
 /bin/
+/code/bin/*
+/code/test/*
+!/code/test/*.*
 *.o
+*.coff
 *.d
-

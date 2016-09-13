@@ -14,6 +14,10 @@
 #include "addrspace.h"
 #include "synch.h"
 
+#ifdef CHANGED
+#include <synchconsole.h>
+#endif //CHANGED
+
 //----------------------------------------------------------------------
 // StartProcess
 //      Run a user program.  Open the executable, load it into
@@ -89,18 +93,26 @@ ConsoleTest (const char *in, const char *out)
 	{
 		readAvail->P ();	       // wait for character to arrive
 		ch = console->GetChar ();
+
+		#ifdef CHANGED
 		if (ch != '\n' && ch != EOF) 
 		{
 			console->PutChar ('<');
 			writeDone->P ();
 		}
+		#endif //CHANGED
+
 		console->PutChar (ch);         // echo it!
 		writeDone->P ();
+		
+		#ifdef CHANGED
 		if (ch != '\n' && ch != EOF) 
 		{
 			console->PutChar ('>');
 			writeDone->P ();
 		}
+		#endif //CHANGED
+
          	// wait for write to finish
 		if (ch == 'q' || ch == EOF) {
 			printf ("Nothing more, bye!\n");
@@ -111,3 +123,22 @@ ConsoleTest (const char *in, const char *out)
 	delete readAvail;
 	delete writeDone;
 }
+#ifdef CHANGED
+void SynchConsoleTest (const char* in, const char* out)
+{
+	char ch;
+	SynchConsole* test_synchconsole = new SynchConsole(in, out);
+	while ((ch = test_synchconsole->SynchGetChar()) != EOF) {
+		if (ch != '\n') 
+			test_synchconsole->SynchPutChar('<');
+
+		test_synchconsole->SynchPutChar(ch);
+
+		if (ch != '\n') 
+			test_synchconsole->SynchPutChar('>');
+	}
+	fprintf(stderr, "EOF detected in SynchConsole!\n");
+	
+	delete test_synchconsole;
+}
+#endif //CHANGED

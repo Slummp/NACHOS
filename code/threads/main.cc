@@ -24,6 +24,7 @@
 #endif
 
 
+
 // External functions used by this file
 
 extern void ThreadTest (void), Copy (char *unixFile, char *nachosFile);
@@ -119,6 +120,21 @@ main (int argc, char **argv)
 		StartProcess (*(argv + 1));
 		argCount = 2;
 	    }
+
+	#ifdef CHANGED
+	  else if (!strcmp (*argv, "-sc"))
+	    {			// test the console
+		if (argc == 1)
+		    SynchConsoleTest (NULL, NULL);
+		else
+		  {
+		      ASSERT (argc > 2);
+		      SynchConsoleTest (*(argv + 1), *(argv + 2));
+		      argCount = 3;
+		  }
+	    }
+	#endif //CHANGED
+
 	  else if (!strcmp (*argv, "-c"))
 	    {			// test the console
 		if (argc == 1)
