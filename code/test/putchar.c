@@ -1,7 +1,7 @@
 #include "syscall.h"
 void print(char c, int n)
 {
-	#if 0
+	#if 1
 		int i;
 		for (i = 0; i < n; i++) {
 			PutChar(c + i);

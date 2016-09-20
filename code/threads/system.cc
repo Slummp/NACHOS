@@ -7,10 +7,13 @@
 
 #include "copyright.h"
 #include "system.h"
+
 #include <locale.h>
 #ifdef __GLIBC__
 #include <malloc.h>
 #endif
+
+
 
 // This defines *all* of the global data structures used by Nachos.
 // These are all initialized and de-allocated by this file.
@@ -39,6 +42,15 @@ Machine *machine;		// user program memory and registers
 PostOffice *postOffice;
 #endif
 
+#ifdef CHANGED
+
+#ifdef USER_PROGRAM
+
+SynchConsole *synchconsole;
+
+#endif
+
+#endif
 
 // External definition, to allow us to take a pointer to this function
 extern void Cleanup ();
@@ -162,6 +174,8 @@ Initialize (int argc, char **argv)
     stats = new Statistics ();	// collect statistics
     interrupt = new Interrupt;	// start up interrupt handling
     scheduler = new Scheduler ();	// initialize the ready queue
+    
+ 
     if (randomYield)		// start the timer (if needed)
 	timer = new Timer (TimerInterruptHandler, 0, randomYield);
 
@@ -179,6 +193,14 @@ Initialize (int argc, char **argv)
 #ifdef USER_PROGRAM
     machine = new Machine (debugUserProg);	// this must come first
 #endif
+
+#ifdef CHANGED
+#ifdef USER_PROGRAM
+/////////////////////////////////////////////////////////////////////////////
+    synchconsole = new SynchConsole(NULL, NULL);
+
+#endif //USER_PROGRAM
+#endif //CHANGED
 
 #ifdef FILESYS
     synchDisk = new SynchDisk ("DISK");
@@ -215,6 +237,15 @@ Cleanup ()
     delete machine;
     machine = NULL;
 #endif
+
+#ifdef CHANGED
+#ifdef USER_PROGRAM
+
+    delete synchconsole;
+    synchconsole = NULL;
+
+#endif //USER_PROGRAM
+#endif //CHANGED
 
 #ifdef FILESYS_NEEDED
     delete fileSystem;

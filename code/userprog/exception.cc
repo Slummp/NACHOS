@@ -25,6 +25,7 @@
 #include "system.h"
 #include "syscall.h"
 
+
 //----------------------------------------------------------------------
 // UpdatePC : Increments the Program Counter register in order to resume
 // the user program immediately after the "syscall" instruction.
@@ -81,6 +82,18 @@ ExceptionHandler (ExceptionType which)
 		    interrupt->Halt ();
 		    break;
 		  }
+
+		#ifdef CHANGED
+
+		case SC_PutChar:
+		  {
+		    DEBUG ('s', "PutChar\n");
+		    synchconsole->SynchPutChar(machine->ReadRegister (4));
+		    break;
+		  }
+
+		#endif //CHANGED
+
 		default:
 		  {
 		    printf("Unimplemented system call %d\n", type);
