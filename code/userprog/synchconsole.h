@@ -16,5 +16,6 @@
 			private:
 				Console* console;
 		};
+		int copyStringFromMachine(int from, char* to, unsigned size);
 	#endif // SYNCHCONSOLE_H
 #endif // CHANGE

@@ -31,10 +31,19 @@
 	}
 	void SynchConsole::SynchPutString(const char s[])
 	{
-		// ...
+		unsigned int i = 0;
+		while (s[i] != '\0') {
+			SynchPutChar(s[i]);
+			i++;
+		}
 	}
 	void SynchConsole::SynchGetString(char* s, int n)
 	{
 		// ...
 	}
+	int copyStringFromMachine(int from, char* to, unsigned size)
+	{
+				
+	}
+	
 #endif // CHANGED

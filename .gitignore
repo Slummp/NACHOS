@@ -6,4 +6,4 @@
 *.o
 *.coff
 *.d
-!nachos
+nachos
