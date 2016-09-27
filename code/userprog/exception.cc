@@ -91,7 +91,14 @@ ExceptionHandler (ExceptionType which)
 		    synchconsole->SynchPutChar(machine->ReadRegister (4));
 		    break;
 		  }
-
+		case SC_PutString:
+		  {
+		    DEBUG ('s', "PutString\n");
+		    char buf[MAX_STRING_SIZE];
+		    copyStringFromMachine(machine->ReadRegister(4), buf, MAX_STRING_SIZE);
+		    synchconsole->SynchPutString(buf);
+		    break;
+		  }
 		#endif //CHANGED
 
 		default:

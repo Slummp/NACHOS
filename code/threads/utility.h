@@ -93,4 +93,10 @@ class dontcopythis {
 		dontcopythis() {};
 };
 
+#ifdef CHANGED
+
+int copyStringFromMachine(int from, char* to, unsigned size);
+
+#endif //CHANGED 
+
 #endif /* UTILITY_H */
