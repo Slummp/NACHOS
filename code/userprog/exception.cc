@@ -99,6 +99,13 @@ ExceptionHandler (ExceptionType which)
 		    synchconsole->SynchPutString(buf);
 		    break;
 		  }
+		case SC_GetChar:
+		  {
+		    DEBUG ('s', "GetChar\n");
+	            int a = synchconsole->SynchGetChar();
+		    machine->WriteRegister(2, a);
+		    break;
+		  }
 		#endif //CHANGED
 
 		default:

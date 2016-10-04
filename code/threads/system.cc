@@ -67,7 +67,23 @@ int copyStringFromMachine(int from, char* to, unsigned size)
 	to[i] = '\0';
 	return i;
 }
-
+int copyStringToMachine(int from, char* to, unsigned size) 
+{
+	unsigned int i;
+	for (i = 0; size > i; i++) 
+	{
+		int tmp;
+		machine->ReadMem(from + i * sizeof(char), sizeof(char), &tmp);
+		to[i] = (char) tmp;
+		if (to[i] == '\0') 
+		{
+			break;
+		}		
+		
+	}
+	to[i] = '\0';
+	return i;
+}
 #endif //USER_PROGRAM
 #endif //CHANGED 
 
