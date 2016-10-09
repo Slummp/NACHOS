@@ -175,7 +175,7 @@ GetChar:
 	j	$31
 	.end GetChar
 /* GetString */
-.globl GetString
+	.globl GetString
 	.ent	GetString
 
 GetString:

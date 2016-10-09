@@ -32,14 +32,27 @@
 	void SynchConsole::SynchPutString(const char s[])
 	{
 		unsigned int i = 0;
-		while (s[i] != '\0') {
+		while (s[i] != '\0')
+		{
 			SynchPutChar(s[i]);
 			i++;
 		}
 	}
 	void SynchConsole::SynchGetString(char* s, int n)
 	{
-		// ...
+		int i = 0;
+
+		while(i < n)
+		{
+			s[i] = SynchGetChar();
+
+			if(s[i] == EOF)
+				break;
+
+			i++;
+		}
+
+		s[i] = '\0';
 	}
 	
 	
