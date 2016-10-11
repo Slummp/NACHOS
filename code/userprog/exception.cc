@@ -69,7 +69,7 @@ void
 ExceptionHandler (ExceptionType which)
 {
     int type = machine->ReadRegister (2);
-
+	
     switch (which)
       {
 	case SyscallException:
@@ -95,17 +95,45 @@ ExceptionHandler (ExceptionType which)
 		  {
 		    DEBUG ('s', "PutString\n");
 		    char buf[MAX_STRING_SIZE];
-		    copyStringFromMachine(machine->ReadRegister(4), buf, MAX_STRING_SIZE);
-		    synchconsole->SynchPutString(buf);
+		    int size;
+		    int nbBlock = 0;
+
+		    while((size = copyStringFromMachine(machine->ReadRegister(4) + MAX_STRING_SIZE * nbBlock * sizeof(char), buf, MAX_STRING_SIZE)) == MAX_STRING_SIZE )
+		    {
+			    synchconsole->SynchPutString(buf);
+			    nbBlock++;
+		    }
+		    copyStringFromMachine(machine->ReadRegister(4) + MAX_STRING_SIZE * nbBlock * sizeof(char), buf, size);
+			synchconsole->SynchPutString(buf);
+
 		    break;
 		  }
 		case SC_GetChar:
 		  {
 		    DEBUG ('s', "GetChar\n");
-	            int a = synchconsole->SynchGetChar();
+	        int a = synchconsole->SynchGetChar();
 		    machine->WriteRegister(2, a);
 		    break;
 		  }
+		case SC_GetString:
+		  {
+		    DEBUG ('s', "GetString\n");
+		    char buf[MAX_STRING_SIZE];
+		    int size;
+		    int nbBlock = 0;
+
+		    do
+		    {
+		    	synchconsole->SynchGetString(buf, MAX_STRING_SIZE);
+		    	size = copyStringToMachine( buf, 
+		    								machine->ReadRegister(4) + MAX_STRING_SIZE * nbBlock * sizeof(char),
+		    								MAX_STRING_SIZE);
+			    nbBlock++;
+		    } while(size == MAX_STRING_SIZE);
+
+		    break;
+		  }
+
 		#endif //CHANGED
 
 		default:

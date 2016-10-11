@@ -2,10 +2,10 @@
 
 int main()
 {
-	char a;
-	a=GetChar();
+	char a = GetChar();
+
     PutChar(a);
     PutChar('\n');
-	
+    
 	Halt();	
 }

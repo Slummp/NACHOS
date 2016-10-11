@@ -29,29 +29,26 @@
 		readAvail->P();		
 		return console->GetChar();
 	}
-	void SynchConsole::SynchPutString(const char s[])
+	void SynchConsole::SynchPutString(const char* str)
 	{
 		unsigned int i = 0;
-		while (s[i] != '\0')
+		while (str[i] != '\0')
 		{
-			SynchPutChar(s[i]);
+			SynchPutChar(str[i]);
 			i++;
 		}
 	}
 	void SynchConsole::SynchGetString(char* s, int n)
 	{
 		int i = 0;
-
 		while(i < n)
 		{
 			s[i] = SynchGetChar();
-
 			if(s[i] == EOF)
 				break;
 
 			i++;
 		}
-
 		s[i] = '\0';
 	}
 	

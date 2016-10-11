@@ -61,27 +61,23 @@ int copyStringFromMachine(int from, char* to, unsigned size)
 		if (to[i] == '\0') 
 		{
 			break;
-		}		
+		}
 		
 	}
 	to[i] = '\0';
 	return i;
 }
-int copyStringToMachine(int from, char* to, unsigned size) 
+int copyStringToMachine(char* from, int to, unsigned size)
 {
 	unsigned int i;
 	for (i = 0; size > i; i++) 
 	{
-		int tmp;
-		machine->ReadMem(from + i * sizeof(char), sizeof(char), &tmp);
-		to[i] = (char) tmp;
-		if (to[i] == '\0') 
+		machine->WriteMem(to + i * sizeof(char), sizeof(char), from[i]);
+		if (from[i] == '\0') 
 		{
 			break;
 		}		
-		
 	}
-	to[i] = '\0';
 	return i;
 }
 #endif //USER_PROGRAM
