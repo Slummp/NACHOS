@@ -34,11 +34,12 @@
 
 #ifdef CHANGED
 
-#define SC_PutChar		11
+#define SC_PutChar	11
 #define SC_PutString	12
 #define SC_GetChar      13
 #define SC_GetString    14
-
+#define SC_ThreadCreate 15
+#define SC_ThreadExit   16
 #endif //CHANGED
 
 #ifdef IN_USER_MODE
@@ -152,6 +153,12 @@ char GetChar();
 
 /* GetString */
 char* GetString();
+
+/* ThreadCreate */
+int ThreadCreate(void f(void *arg), void *arg);
+
+/* ThreadExit */
+void ThreadExit(void);
 
 #endif //CHANGED
 

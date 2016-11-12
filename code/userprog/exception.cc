@@ -25,6 +25,11 @@
 #include "system.h"
 #include "syscall.h"
 
+#ifdef CHANGED
+
+#include "userthread.h"
+
+#endif //CHANGED
 
 //----------------------------------------------------------------------
 // UpdatePC : Increments the Program Counter register in order to resume
@@ -126,14 +131,24 @@ ExceptionHandler (ExceptionType which)
 		    {
 		    	synchconsole->SynchGetString(buf, MAX_STRING_SIZE);
 		    	size = copyStringToMachine( buf, 
-		    								machine->ReadRegister(4) + MAX_STRING_SIZE * nbBlock * sizeof(char),
-		    								MAX_STRING_SIZE);
+		    					machine->ReadRegister(4) + MAX_STRING_SIZE * nbBlock * sizeof(char),
+		    					MAX_STRING_SIZE);
 			    nbBlock++;
 		    } while(size == MAX_STRING_SIZE);
 
 		    break;
 		  }
-
+		case SC_ThreadCreate:
+		  {
+		    do_ThreadCreate(machine->ReadRegister(4), machine->ReadRegister(5));
+          	    break;
+		  }
+		case SC_ThreadExit:
+		  {
+		  		DEBUG('s', "SC_ThreadExit\n");
+		    	do_ThreadExit();
+          	    break;
+		  }
 		#endif //CHANGED
 
 		default:

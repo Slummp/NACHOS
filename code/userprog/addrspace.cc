@@ -197,3 +197,11 @@ AddrSpace::RestoreState ()
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
 }
+
+#ifdef CHANGED
+
+int AddrSpace::AllocateUserStack(int pos) {
+	return (PageSize * numPages - pos * 256);
+}
+
+#endif //CHANGED
