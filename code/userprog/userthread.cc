@@ -58,7 +58,7 @@ static void StartUserThread(void *p) {
 
     
    
-    free((struct ThreadArgs *)p);
+    delete p;
     machine->Run();
 }
 #endif //CHANGED

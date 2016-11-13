@@ -142,7 +142,7 @@ AddrSpace::~AddrSpace ()
   
   #ifdef CHANGED
   
-  //delete lockCpt;
+  delete lockCpt;
   
   #endif //CHANGED
 
@@ -216,13 +216,14 @@ int AddrSpace::AllocateUserStack() {
     // Crit
     
     lockCpt->Acquire();
+    int stackPointer = (PageSize * numPages - 256*cpt);
     cpt++;
-   
     lockCpt->Release();
 
     // /Crit
-	
-    return (PageSize * numPages - 256);
+
+	ASSERT(stackPointer > 256);
+    return stackPointer;
 }
 
 int AddrSpace::DeallocateUserStack() {
