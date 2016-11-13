@@ -122,6 +122,11 @@ AddrSpace::AddrSpace (OpenFile * executable)
 	   size - UserStacksAreaSize, UserStacksAreaSize);
 
     pageTable[0].valid = FALSE;			// Catch NULL dereference
+    
+    #ifdef CHANGED
+        lockCpt = new Lock("cpt allocStack");
+        cpt = 1;
+    #endif //CHANGED
 }
 
 //----------------------------------------------------------------------
@@ -134,6 +139,13 @@ AddrSpace::~AddrSpace ()
   // LB: Missing [] for delete
   // delete pageTable;
   delete [] pageTable;
+  
+  #ifdef CHANGED
+  
+  //delete lockCpt;
+  
+  #endif //CHANGED
+
   // End of modification
 }
 
@@ -200,8 +212,28 @@ AddrSpace::RestoreState ()
 
 #ifdef CHANGED
 
-int AddrSpace::AllocateUserStack(int pos) {
-	return (PageSize * numPages - pos * 256);
+int AddrSpace::AllocateUserStack() {
+    // Crit
+    
+    lockCpt->Acquire();
+    cpt++;
+   
+    lockCpt->Release();
+
+    // /Crit
+	
+    return (PageSize * numPages - 256);
 }
 
+int AddrSpace::DeallocateUserStack() {
+    // Crit
+    
+    lockCpt->Acquire();
+    cpt--;
+    int c = cpt;
+    lockCpt->Release();
+    // /Crit
+
+    return c;
+}
 #endif //CHANGED

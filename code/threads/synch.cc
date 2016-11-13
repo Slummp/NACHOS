@@ -103,25 +103,50 @@ Semaphore::V ()
 // the test case in the network assignment won't work!
 Lock::Lock (const char *debugName)
 {
-    (void) debugName;
-    /* TODO */
-    ASSERT(FALSE);
+    #ifdef CHANGED
+        name = debugName;
+        semaphore = new Semaphore(name, 1); //Init a semaphore at 1 
+   #else
+        (void) debugName;
+        ASSERT(FALSE);
+    #endif //CHANGED
+
 }
 
 Lock::~Lock ()
 {
+    #ifdef CHANGED
+
+    delete name;
+    delete semaphore;
+    
+    #endif //CHANGED
 }
 void
 Lock::Acquire ()
 {
-    /* TODO */
-    ASSERT(FALSE);
+    #ifdef CHANGED
+    
+        semaphore->P();
+    
+    #else
+    
+        ASSERT(FALSE);
+
+    #endif //CHANGED
 }
 void
 Lock::Release ()
 {
-    /* TODO */
-    ASSERT(FALSE);
+    #ifdef CHANGED
+    
+        semaphore->V();
+    
+    #else
+    
+        ASSERT(FALSE);
+
+    #endif //CHANGED
 }
 
 Condition::Condition (const char *debugName)

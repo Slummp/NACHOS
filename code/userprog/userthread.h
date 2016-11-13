@@ -4,7 +4,8 @@
 #ifdef USER_PROGRAM
 #ifdef CHANGED
 typedef struct ThreadArgs ThreadArgs;
-extern void StartUserThread(void *);
+
+static void StartUserThread(void *);
 extern int do_ThreadCreate(int f, int arg);
 extern void do_ThreadExit();
 

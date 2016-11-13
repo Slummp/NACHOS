@@ -18,13 +18,22 @@ int do_ThreadCreate(int f, int arg) {
 	schmurtz->func = f;
 	schmurtz->arg = arg;
 	
-	newThread->Start(StartUserThread, schmurtz);
+	newThread->Start(StartUserThread, (void *)schmurtz);
+    return 0;
 }
 void do_ThreadExit() {
-	currentThread->Finish();
+    
+    /* Si c > 0 : Il y a encore au moins un thread en execution */
+    
+    int c = currentThread->space->DeallocateUserStack();
+    if (c > 0)
+        currentThread->Finish();
+    else
+        interrupt->Halt();
+
 }
 
-void StartUserThread(void *p) {
+static void StartUserThread(void *p) {
     int i;
 	
     for (i = 0; i < NumTotalRegs; i++)
@@ -36,20 +45,20 @@ void StartUserThread(void *p) {
     
     DEBUG('s', "PCReg - f : %d\n", f);
     machine->WriteRegister (PCReg, f);
-    
-    DEBUG('s', "NextPCReg - args: %d\n", machine->ReadRegister(PCReg) + 4);
+
     machine->WriteRegister (NextPCReg, machine->ReadRegister(PCReg) + 4);
     
     
     DEBUG('s', "Reg 4 - args: %d\n", args);
     machine->WriteRegister (4, args);
     
-    DEBUG('s', "StackReg - AllocateUserStack: %d\n", currentThread->space->AllocateUserStack(1));
-    machine->WriteRegister (StackReg, currentThread->space->AllocateUserStack(1));
+    int allocStack = currentThread->space->AllocateUserStack();
+    DEBUG('s', "StackReg - AllocateUserStack: %d\n", allocStack);
+    machine->WriteRegister (StackReg, allocStack);
 
     
    
-    free((int *)p);
+    free((struct ThreadArgs *)p);
     machine->Run();
 }
 #endif //CHANGED

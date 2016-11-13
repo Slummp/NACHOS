@@ -43,7 +43,7 @@ class Semaphore:dontcopythis
      ~Semaphore ();		// de-allocate semaphore
     const char *getName ()
     {
-	return name;
+	     return name;
     }				// debugging assist
 
     void P ();			// these are the only operations on a semaphore
@@ -74,7 +74,7 @@ class Lock:dontcopythis
      ~Lock ();			// deallocate lock
     const char *getName ()
     {
-	return name;
+    	return name;
     }				// debugging assist
 
     void Acquire ();		// these are the only operations on a lock
@@ -87,6 +87,7 @@ class Lock:dontcopythis
 
   private:
     const char *name;		// for debugging
+    Semaphore *semaphore;
     // plus some other stuff you'll need to define
 };
 
