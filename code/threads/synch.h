@@ -39,20 +39,20 @@
 class Semaphore:dontcopythis
 {
   public:
-    Semaphore (const char *debugName, int initialValue);	// set initial value
-     ~Semaphore ();		// de-allocate semaphore
+    Semaphore (const char *debugName, int initialValue);  // set initial value
+     ~Semaphore ();   // de-allocate semaphore
     const char *getName ()
     {
-	     return name;
-    }				// debugging assist
+       return name;
+    }       // debugging assist
 
-    void P ();			// these are the only operations on a semaphore
-    void V ();			// they are both *atomic*
+    void P ();      // these are the only operations on a semaphore
+    void V ();      // they are both *atomic*
 
   private:
-    const char *name;		// useful for debugging
-    int value;			// semaphore value, always >= 0
-    List *queue;		// threads waiting in P() for the value to be > 0
+    const char *name;   // useful for debugging
+    int value;      // semaphore value, always >= 0
+    List *queue;    // threads waiting in P() for the value to be > 0
 };
 
 // The following class defines a "lock".  A lock can be BUSY or FREE.
@@ -70,24 +70,26 @@ class Semaphore:dontcopythis
 class Lock:dontcopythis
 {
   public:
-    Lock (const char *debugName);	// initialize lock to be FREE
-     ~Lock ();			// deallocate lock
+    Lock (const char *debugName); // initialize lock to be FREE
+     ~Lock ();      // deallocate lock
     const char *getName ()
     {
-    	return name;
-    }				// debugging assist
+      return name;
+    }       // debugging assist
 
-    void Acquire ();		// these are the only operations on a lock
-    void Release ();		// they are both *atomic*
+    void Acquire ();    // these are the only operations on a lock
+    void Release ();    // they are both *atomic*
 
-    bool isHeldByCurrentThread ();	// true if the current thread
+    bool isHeldByCurrentThread ();  // true if the current thread
     // holds this lock.  Useful for
     // checking in Release, and in
     // Condition variable ops below.
 
   private:
-    const char *name;		// for debugging
-    Semaphore *semaphore;
+    const char *name;   // for debugging
+    #ifdef CHANGED
+      Semaphore *semaphore;
+    #endif //CHANGED
     // plus some other stuff you'll need to define
 };
 
@@ -126,20 +128,20 @@ class Lock:dontcopythis
 class Condition:dontcopythis
 {
   public:
-    Condition (const char *debugName);	// initialize condition to 
+    Condition (const char *debugName);  // initialize condition to 
     // "no one waiting"
-     ~Condition ();		// deallocate the condition
+     ~Condition ();   // deallocate the condition
     const char *getName ()
     {
-	return (name);
+  return (name);
     }
 
-    void Wait (Lock * conditionLock);	// these are the 3 operations on 
+    void Wait (Lock * conditionLock); // these are the 3 operations on 
     // condition variables; releasing the 
     // lock and going to sleep are 
     // *atomic* in Wait()
-    void Signal (Lock * conditionLock);	// conditionLock must be held by
-    void Broadcast (Lock * conditionLock);	// the currentThread for all of 
+    void Signal (Lock * conditionLock); // conditionLock must be held by
+    void Broadcast (Lock * conditionLock);  // the currentThread for all of 
     // these operations
 
   private:

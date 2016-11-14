@@ -44,18 +44,21 @@ Thread::Thread (const char *threadName)
     stack = NULL;
     status = JUST_CREATED;
 #ifdef USER_PROGRAM
-    if (currentThread)
-	// Inherit space from father
-	space = currentThread->space;
-    else
-	space = NULL;
 
+    if (currentThread)
+    	// Inherit space from father
+    	space = currentThread->space;
+    else {
+	    space = NULL;
+      bitIndex = 0;
+    }
     // must be explicitly set to 0 since when Enabling interrupts,
     // DelayedLoad is called !!!
     userRegisters[LoadReg] = 0;
     userRegisters[LoadValueReg] = 0;
 
 #endif
+
 }
 
 //----------------------------------------------------------------------

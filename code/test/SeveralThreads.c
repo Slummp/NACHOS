@@ -13,8 +13,7 @@ int main()
 	ThreadCreate((void*)p, 0);
 	ThreadCreate((void*)p, 0);
 	ThreadCreate((void*)p, 0);
-	ThreadCreate((void*)p, 0);
+
 	ThreadExit();
 }
-
 #endif //CHANGED

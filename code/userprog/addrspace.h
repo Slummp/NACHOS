@@ -21,6 +21,7 @@
 
 #ifdef CHANGED
     class Lock;
+    #include "bitmap.h"
 #endif
 
 class AddrSpace:dontcopythis
@@ -38,17 +39,17 @@ class AddrSpace:dontcopythis
     void RestoreState ();	// info on a context switch 
 
     #ifdef CHANGED
-	   int AllocateUserStack();
-       int DeallocateUserStack();
+      int AllocateUserStack(int *bitIndex);
+      int DeallocateUserStack(int bitIndex);
     #endif //CHANGED
        
   private:
 
       #ifdef CHANGED
 
-      Lock *lockCpt;
-      int cpt;
-      
+      Lock *lockBitmap;
+      BitMap *bitmap;
+      unsigned int nbrStacks;
       #endif //CHANGED
 
       TranslationEntry * pageTable;	// Assume linear page table translation

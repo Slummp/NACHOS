@@ -122,11 +122,13 @@ class Thread:dontcopythis
     unsigned int valgrind_id;	// valgrind ID for the stack
     ThreadStatus status;	// ready, running or blocked
     const char *name;
+    
+
 
     void StackAllocate (VoidFunctionPtr func, void *arg);
     // Allocate a stack for thread.
     // Used internally by Start()
-
+    
 #ifdef USER_PROGRAM
 // A thread running a user program actually has *two* sets of CPU registers -- 
 // one for its state while executing user code, one for its state 
@@ -138,6 +140,11 @@ class Thread:dontcopythis
     void SaveUserState ();	// save user-level register state
     void RestoreUserState ();	// restore user-level register state
 
+    #ifdef CHANGED
+        int bitIndex;
+        int stackPointer;
+    #endif //CHANGED
+    
     AddrSpace *space;		// User code this thread is running.
 #endif
 };

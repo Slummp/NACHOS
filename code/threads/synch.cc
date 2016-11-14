@@ -64,17 +64,17 @@ Semaphore::~Semaphore ()
 void
 Semaphore::P ()
 {
-    IntStatus oldLevel = interrupt->SetLevel (IntOff);	// disable interrupts
+    IntStatus oldLevel = interrupt->SetLevel (IntOff);  // disable interrupts
 
     while (value == 0)
-      {				// semaphore not available
-	  queue->Append ((void *) currentThread);	// so go to sleep
-	  currentThread->Sleep ();
+      {             // semaphore not available
+      queue->Append ((void *) currentThread);   // so go to sleep
+      currentThread->Sleep ();
       }
-    value--;			// semaphore available, 
+    value--;            // semaphore available, 
     // consume its value
 
-    (void) interrupt->SetLevel (oldLevel);	// re-enable interrupts
+    (void) interrupt->SetLevel (oldLevel);  // re-enable interrupts
 }
 
 //----------------------------------------------------------------------
@@ -92,8 +92,8 @@ Semaphore::V ()
     IntStatus oldLevel = interrupt->SetLevel (IntOff);
 
     thread = (Thread *) queue->Remove ();
-    if (thread != NULL)		// make thread ready, consuming the V immediately
-	scheduler->ReadyToRun (thread);
+    if (thread != NULL)     // make thread ready, consuming the V immediately
+    scheduler->ReadyToRun (thread);
     value++;
     (void) interrupt->SetLevel (oldLevel);
 }
@@ -117,7 +117,6 @@ Lock::~Lock ()
 {
     #ifdef CHANGED
 
-    delete name;
     delete semaphore;
     
     #endif //CHANGED

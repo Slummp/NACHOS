@@ -149,6 +149,11 @@ ExceptionHandler (ExceptionType which)
 		    	do_ThreadExit();
           	    break;
 		  }
+		case SC_Exit:
+		  {
+		  		DEBUG('s',"Exited with code %d\n", machine->ReadRegister(4));
+				break;
+		  }
 		#endif //CHANGED
 
 		default:

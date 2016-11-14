@@ -21,9 +21,9 @@
 	{
 		delete console;
 		delete writeDone;
-		delete readAvail;/*
+		delete readAvail;
 		delete lockGetChar;
-		delete lockPutChar;*/
+		delete lockPutChar;
 	}
 	void SynchConsole::SynchPutChar(int ch)
 	{

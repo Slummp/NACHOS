@@ -72,7 +72,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
     /* Check that this is really a MIPS program */
     ASSERT (noffH.noffMagic == NOFFMAGIC);
 
-// how big is address space?
+    // how big is address space?
     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size + UserStacksAreaSize;	// we need to increase the size
     // to leave room for the stack
     numPages = divRoundUp (size, PageSize);
@@ -87,7 +87,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
 
     DEBUG ('a', "Initializing address space, num pages %d, total size 0x%x\n",
 	   numPages, size);
-// first, set up the translation 
+    // first, set up the translation 
     pageTable = new TranslationEntry[numPages];
     for (i = 0; i < numPages; i++)
       {
@@ -100,7 +100,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
 	  // pages to be read-only
       }
 
-// then, copy in the code and data segments into memory
+    // then, copy in the code and data segments into memory
     if (noffH.code.size > 0)
       {
 	  DEBUG ('a', "Initializing code segment, at 0x%x, size 0x%x\n",
@@ -124,8 +124,11 @@ AddrSpace::AddrSpace (OpenFile * executable)
     pageTable[0].valid = FALSE;			// Catch NULL dereference
     
     #ifdef CHANGED
-        lockCpt = new Lock("cpt allocStack");
-        cpt = 1;
+        lockBitmap = new Lock("bitmap allocStack");
+        nbrStacks = UserStacksAreaSize / 256;
+        bitmap = new BitMap(nbrStacks); 
+        // [0][0]...
+        bitmap->Mark(0); //On reserve la pile du thread principal
     #endif //CHANGED
 }
 
@@ -142,7 +145,7 @@ AddrSpace::~AddrSpace ()
   
   #ifdef CHANGED
   
-  delete lockCpt;
+    delete lockBitmap;
   
   #endif //CHANGED
 
@@ -212,29 +215,36 @@ AddrSpace::RestoreState ()
 
 #ifdef CHANGED
 
-int AddrSpace::AllocateUserStack() {
-    // Crit
-    
-    lockCpt->Acquire();
-    int stackPointer = (PageSize * numPages - 256*cpt);
-    cpt++;
-    lockCpt->Release();
+    int AddrSpace::AllocateUserStack(int *bitIndex) {
+        
+        lockBitmap->Acquire();
+        // Crit
+        
+        //On cherche une pile à allouer
+        *bitIndex = bitmap->Find();
+        DEBUG('s', "Attribution de %d\n", *bitIndex);
+        bitmap->Print();
+        int stackPointer = (PageSize * numPages - 256 * *bitIndex);
+        
+        // /Crit
+        lockBitmap->Release();
 
-    // /Crit
+        return stackPointer;
+    }
 
-	ASSERT(stackPointer > 256);
-    return stackPointer;
-}
+    int AddrSpace::DeallocateUserStack(int bitIndex) {
+        
+        DEBUG('s', "Liberation de %d\n", bitIndex);
+        lockBitmap->Acquire();
+        // Crit
+        
+        bitmap->Clear(bitIndex); //On libère la pile ciblée par bitIndex
+        int c = nbrStacks - bitmap->NumClear();
+        //bitmap->Print();
+        // /Crit
+        lockBitmap->Release();
 
-int AddrSpace::DeallocateUserStack() {
-    // Crit
-    
-    lockCpt->Acquire();
-    cpt--;
-    int c = cpt;
-    lockCpt->Release();
-    // /Crit
 
-    return c;
-}
+        return c;
+    }
 #endif //CHANGED
