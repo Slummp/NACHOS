@@ -223,7 +223,6 @@ AddrSpace::RestoreState ()
         //On cherche une pile à allouer
         *bitIndex = bitmap->Find();
         DEBUG('s', "Attribution de %d\n", *bitIndex);
-        bitmap->Print();
         int stackPointer = (PageSize * numPages - 256 * *bitIndex);
         
         // /Crit

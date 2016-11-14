@@ -81,7 +81,8 @@ ExceptionHandler (ExceptionType which)
           {
 	    switch (type)
 	      {
-		case SC_Halt:
+
+	    case SC_Halt:
 		  {
 		    DEBUG ('s', "Shutdown, initiated by user program.\n");
 		    interrupt->Halt ();
@@ -143,17 +144,18 @@ ExceptionHandler (ExceptionType which)
 		    do_ThreadCreate(machine->ReadRegister(4), machine->ReadRegister(5));
           	    break;
 		  }
+		case SC_Exit:
+		  {
+		  		DEBUG('s',"Exited with code %d\n", machine->ReadRegister(4));
+				
+		  }
 		case SC_ThreadExit:
 		  {
 		  		DEBUG('s', "SC_ThreadExit\n");
 		    	do_ThreadExit();
           	    break;
 		  }
-		case SC_Exit:
-		  {
-		  		DEBUG('s',"Exited with code %d\n", machine->ReadRegister(4));
-				break;
-		  }
+		
 		#endif //CHANGED
 
 		default:
