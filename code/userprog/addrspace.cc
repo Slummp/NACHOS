@@ -22,6 +22,11 @@
 #include "syscall.h"
 #include "new"
 
+#ifdef CHANGED
+
+static void ReadAtVirtual(OpenFile *executable, int virtualAddr, int numBytes, int position, TranslationEntry *pageTable, unsigned numPages);
+
+#endif //CHANGED
 //----------------------------------------------------------------------
 // SwapHeader
 //      Do little endian to big endian conversion on the bytes in the 
@@ -91,7 +96,8 @@ AddrSpace::AddrSpace (OpenFile * executable)
     pageTable = new TranslationEntry[numPages];
     for (i = 0; i < numPages; i++)
       {
-	  pageTable[i].physicalPage = i;	// for now, phys page # = virtual page #
+      pageTable[i].physicalPage = i + 1;
+      pageTable[i].virtualPage = i;
 	  pageTable[i].valid = TRUE;
 	  pageTable[i].use = FALSE;
 	  pageTable[i].dirty = FALSE;
@@ -105,17 +111,13 @@ AddrSpace::AddrSpace (OpenFile * executable)
       {
 	  DEBUG ('a', "Initializing code segment, at 0x%x, size 0x%x\n",
 		 noffH.code.virtualAddr, noffH.code.size);
-	  executable->ReadAt (&(machine->mainMemory[noffH.code.virtualAddr]),
-			      noffH.code.size, noffH.code.inFileAddr);
+      ReadAtVirtual(executable, noffH.code.virtualAddr, noffH.code.size, noffH.code.inFileAddr, pageTable, numPages);
       }
     if (noffH.initData.size > 0)
       {
 	  DEBUG ('a', "Initializing data segment, at 0x%x, size 0x%x\n",
 		 noffH.initData.virtualAddr, noffH.initData.size);
-	  executable->ReadAt (&
-			      (machine->mainMemory
-			       [noffH.initData.virtualAddr]),
-			      noffH.initData.size, noffH.initData.inFileAddr);
+      ReadAtVirtual(executable, noffH.initData.virtualAddr, noffH.initData.size, noffH.initData.inFileAddr, pageTable, numPages);
       }
 
     DEBUG ('a', "Area for stacks at 0x%x, size 0x%x\n",
@@ -245,5 +247,30 @@ AddrSpace::RestoreState ()
 
 
         return c;
+    }
+    static void ReadAtVirtual(OpenFile *executable, int virtualAddr, int numBytes, int position, 
+                            TranslationEntry *pageTable, unsigned numPages)
+    {
+        char buf[numBytes];
+        unsigned short sizeChar = sizeof(char);
+
+        // Sauvegarde de l'état du processus initial
+        TranslationEntry *oldPageTable = machine->pageTable;
+        int oldNumPage = machine->pageTableSize;
+
+        // Mise en place de l'état du processus créé
+        machine->pageTable = pageTable;
+        machine->pageTableSize = numPages;
+
+        executable->ReadAt(buf, numBytes, position);
+
+        for(int i = 0 ; i < numBytes ; i++)
+        {
+            machine->WriteMem(virtualAddr + i, sizeChar, (int) buf[i]);
+        }
+
+        // Restauration de l'état du processus initial
+        machine->pageTable = oldPageTable;
+        machine->pageTableSize = oldNumPage;
     }
 #endif //CHANGED
