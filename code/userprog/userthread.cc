@@ -14,7 +14,8 @@ typedef struct ThreadArgs {
 
 int do_ThreadCreate(int f, int arg) {
 	DEBUG('t', "Creating thread...\n");
-	Thread *newThread = new Thread("new Thread");
+	
+    Thread *newThread = new Thread("new Thread");
 	ThreadArgs *schmurtz = new ThreadArgs();
 	schmurtz->func = f;
 	schmurtz->arg = arg;

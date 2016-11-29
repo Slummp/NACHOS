@@ -3,7 +3,7 @@
 int main()
 {
 	PutChar('a');
+	while (1);
 	PutChar('\n');
-	
-	Halt();
+	return 0;
 }

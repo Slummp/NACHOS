@@ -8,6 +8,8 @@
 #include "copyright.h"
 #include "system.h"
 
+
+
 #include <locale.h>
 #ifdef __GLIBC__
 #include <malloc.h>
@@ -36,6 +38,7 @@ SynchDisk *synchDisk;
 
 #ifdef USER_PROGRAM		// requires either FILESYS or FILESYS_STUB
 Machine *machine;		// user program memory and registers
+PageProvider *pageProvider;
 #endif
 
 #ifdef NETWORK
@@ -227,6 +230,7 @@ Initialize (int argc, char **argv)
 
 #ifdef CHANGED
 #ifdef USER_PROGRAM
+    pageProvider = new PageProvider(NumPhysPages); 
 /////////////////////////////////////////////////////////////////////////////
     synchconsole = new SynchConsole(NULL, NULL);
 

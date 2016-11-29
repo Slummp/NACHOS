@@ -28,6 +28,7 @@
 #ifdef CHANGED
 
 #include "userthread.h"
+#include "userprocess.h"
 
 #endif //CHANGED
 
@@ -155,7 +156,15 @@ ExceptionHandler (ExceptionType which)
 		    	do_ThreadExit();
           	    break;
 		  }
-		
+		case SC_ForkExec:
+		  {
+		  		char s[MAX_STRING_SIZE];
+		  		
+		  		copyStringFromMachine(machine->ReadRegister(4), s, MAX_STRING_SIZE);
+		  		
+		  		do_ForkExec(s);
+				break;
+		  }
 		#endif //CHANGED
 
 		default:

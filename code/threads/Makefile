@@ -8,7 +8,7 @@
 # of liability and disclaimer of warranty provisions.
 
 DEFINES = -DTHREADS
-INCPATH = -I../threads -I../machine
+INCPATH = -I../threads -I../machine -I../userprog
 C_OFILES = $(THREAD_O)
 
 include ../Makefile.common
