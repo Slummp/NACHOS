@@ -3,7 +3,14 @@
 int main()
 {
 	PutChar('a');
-	while (1);
+	PutChar('a');
+	PutChar('a');
+	PutChar('a');
+	PutChar('a');
+	PutChar('a');
+	PutChar('a');
+	PutChar('a');
+	PutChar('a');
 	PutChar('\n');
 	return 0;
 }

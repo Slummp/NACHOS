@@ -37,11 +37,19 @@ void do_ThreadExit() {
     DEBUG('s', "do_ThreadExit %d\n", currentThread->bitIndex);
     int c = currentThread->space->DeallocateUserStack(currentThread->bitIndex);
     DEBUG('s', "c: %d\n", c);
-    if (c > 0)
+    if (c > 0) { //Si il reste un thread
         currentThread->Finish();
-    else
-        interrupt->Halt();
-
+    }
+    else { //Si il n'y a plus de thread
+        machine->decNbProcess();
+        DEBUG('s', "Dec nb process\n");
+        if (machine->getNbProcess() == 0) {
+            interrupt->Halt();
+        }
+        else {
+            currentThread->Finish();
+        }
+    }
 }
 
 static void StartUserThread(void *p) {

@@ -70,7 +70,9 @@ Machine::Machine(bool debug)
     tlb = NULL;
     pageTable = NULL;
 #endif
-
+    #ifdef CHANGED
+        nbProcess = 0;
+    #endif 
     singleStep = debug;
     runUntilTime = 0;
     CheckEndian();
@@ -218,4 +220,14 @@ void Machine::WriteRegister(int num, int value)
 	// DEBUG('m', "WriteRegister %d, value %d\n", num, value);
 	registers[num] = value;
     }
-
+#ifdef CHANGED
+void Machine::incNbProcess() {
+    nbProcess++;
+}
+void Machine::decNbProcess() {
+    nbProcess--;
+}
+unsigned Machine::getNbProcess() {
+    return nbProcess;
+}
+#endif

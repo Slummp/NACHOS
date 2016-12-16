@@ -184,12 +184,20 @@ class Machine:dontcopythis {
 
     TranslationEntry *pageTable;
     unsigned int pageTableSize;
-
+    
+    #ifdef CHANGED
+    void incNbProcess();
+    void decNbProcess();
+    unsigned getNbProcess();
+    #endif //CHANGED
   private:
     bool singleStep;		// drop back into the debugger after each
 				// simulated instruction
     int runUntilTime;		// drop back into the debugger when simulated
 				// time reaches this value
+    #ifdef CHANGED
+    unsigned nbProcess;
+    #endif //CHANGED
 };
 
 extern void ExceptionHandler(ExceptionType which);
