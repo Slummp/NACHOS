@@ -5,16 +5,20 @@
 PageProvider::PageProvider(int nitems) 
 {
 	bitmap = new BitMap(nitems);
+	lockGEP = new Lock("PageProvider GetEmptyPage");
 }
 
 PageProvider::~PageProvider() 
 {
+	delete lockGEP;
 	delete bitmap;
 }
 
 int PageProvider::getEmptyPage() 
 {
+	lockGEP->Acquire();
 	int page = bitmap->Find();
+	lockGEP->Release();
 	
 	if (page == -1) return -1;
 

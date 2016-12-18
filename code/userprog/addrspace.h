@@ -17,7 +17,7 @@
 #include "filesys.h"
 #include "translate.h"
 
-#define UserStacksAreaSize		1024	// increase this as necessary!
+#define UserStacksAreaSize	8192	// increase this as necessary!
 
 #ifdef CHANGED
     class Lock;

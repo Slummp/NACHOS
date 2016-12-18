@@ -27,7 +27,7 @@ int do_ThreadCreate(int f, int arg) {
     schmurtz->stackPointer = currentThread->space->AllocateUserStack(&newThread->bitIndex);
     
     newThread->Start(StartUserThread, (void *)schmurtz);
-	DEBUG('t', "Thread Created\n");
+	DEBUG('s', "Thread Created assigned page : %d\n", newThread->bitIndex);
 
     return 0;
 }
@@ -41,9 +41,9 @@ void do_ThreadExit() {
         currentThread->Finish();
     }
     else { //Si il n'y a plus de thread
-        machine->decNbProcess();
-        DEBUG('s', "Dec nb process\n");
-        if (machine->getNbProcess() == 0) {
+        nbProcess--;
+        DEBUG('s', "Dec nb process %d\n", nbProcess);
+        if (nbProcess == 0) {
             interrupt->Halt();
         }
         else {

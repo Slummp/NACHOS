@@ -33,7 +33,7 @@ extern Timer *timer;		// the hardware alarm clock
 #include "machine.h"
 
 #ifdef CHANGED 
-
+extern unsigned nbProcess;
 #include "PageProvider.h"
 
 extern PageProvider *pageProvider;

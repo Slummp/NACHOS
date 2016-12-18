@@ -69,9 +69,11 @@ AddrSpace::AddrSpace (OpenFile * executable)
 {
     NoffHeader noffH;
     unsigned int i, size;
+    
     //Increasing process counter 
-    machine->incNbProcess();
-    DEBUG('s', "Inc nb process\n");
+    nbProcess++;
+    DEBUG('s', "Inc nb process %d\n", nbProcess);
+
     executable->ReadAt (&noffH, sizeof (noffH), 0);
     if ((noffH.noffMagic != NOFFMAGIC) &&
 	(WordToHost (noffH.noffMagic) == NOFFMAGIC))
@@ -85,21 +87,26 @@ AddrSpace::AddrSpace (OpenFile * executable)
     numPages = divRoundUp (size, PageSize);
     size = numPages * PageSize;
 
-    // check we're not trying
+    // check we're not tryingP
     // to run anything too big --
     // at least until we have
     // virtual memory
     if (numPages > pageProvider->numAvailPage()) //NumPagePhys
 	    throw std::bad_alloc();
 
-    DEBUG ('a', "Initializing address space, num pages %d, total size 0x%x\n",
-	    size);
+    DEBUG ('s', "Initializing address space, num pages %d, total size 0x%x\n",
+	    numPages, size);
     // first, set up the translation 
     pageTable = new TranslationEntry[numPages];
+    int physPage = 0;
     for (i = 0; i < numPages; i++)
       {
-      pageTable[i].physicalPage = pageProvider->getEmptyPage(); //i + 1;
-      pageTable[i].virtualPage = i;
+      DEBUG('s', "Assigning page %d / %d\n", i+1, numPages);
+      physPage = pageProvider->getEmptyPage();
+      pageTable[i].physicalPage = physPage; //i + 1;
+      ASSERT(physPage != -1);
+      //DEBUG('s', "Assigning page %d\n", pageTable[i].physicalPage);
+      //pageTable[i].virtualPage = i + 1;
 	  pageTable[i].valid = TRUE;
 	  pageTable[i].use = FALSE;
 	  pageTable[i].dirty = FALSE;
@@ -129,7 +136,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
     
     #ifdef CHANGED
         lockBitmap = new Lock("bitmap allocStack");
-        nbrStacks = UserStacksAreaSize / 256;
+        nbrStacks = (UserStacksAreaSize)/ 256;
         bitmap = new BitMap(nbrStacks); 
         // [0][0]...
         bitmap->Mark(0); //On reserve la pile du thread principal

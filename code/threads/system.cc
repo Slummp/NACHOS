@@ -48,6 +48,7 @@ PostOffice *postOffice;
 #ifdef CHANGED
 
 #ifdef USER_PROGRAM
+unsigned nbProcess = 0;
 
 SynchConsole *synchconsole;
 

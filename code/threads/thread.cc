@@ -45,9 +45,11 @@ Thread::Thread (const char *threadName)
     status = JUST_CREATED;
 #ifdef USER_PROGRAM
 
-    if (currentThread)
+    if (currentThread) {
     	// Inherit space from father
     	space = currentThread->space;
+      bitIndex = currentThread->bitIndex;
+    }
     else {
 	    space = NULL;
       bitIndex = 0;

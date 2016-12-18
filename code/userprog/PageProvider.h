@@ -17,6 +17,7 @@ class PageProvider
 	private:
 		int availPage;
 		BitMap *bitmap;
+		Lock *lockGEP;
 };
 
 #endif //PAGEPROVIDER_H

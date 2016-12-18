@@ -3,9 +3,8 @@
 int main()
 {
 
+	ForkExec("../test/SeveralThreads");
 	ForkExec("../test/putchar");
-	ForkExec("../test/putchar");
-	ForkExec("../test/putchar");
-	
+	Exit(0);
 }
 #endif //CHANGED

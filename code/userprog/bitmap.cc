@@ -105,8 +105,10 @@ BitMap::Find ()
 	if (!Test (i))
 	  {
 	      Mark (i);
+          DEBUG('b', "Bitmap %d find %d (stay %d free)\n", this, i, this->NumClear());
 	      return i;
 	  }
+    DEBUG('b', "Bitmap full marked\n");
     return -1;
 }
 
